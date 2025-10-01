@@ -1,17 +1,26 @@
 import csv
-import streamlit as st
+# import streamlit as st
 
 # --- Fungsi untuk load data ---
 def load_news(filename):
     """Baca file news_data.csv ke list of dict"""
     # TODO: buka file CSV (filename) dan baca dengan csv.DictReader
     # kembalikan hasilnya dalam bentuk list
-    pass
+    with open('news_data.csv',mode='r') as news_data:
+        read = csv.DictReader(news_data)
+        ubah = list(read)
+    return ubah
+
+print(load_news("news_data.csv"))
 
 def load_comments(filename):
     """Baca file comment_news.csv ke list of dict"""
     # TODO: sama seperti load_news tapi untuk file komentar
-    pass
+    with open('comment_news.csv',mode='r') as comment_news:
+        comment = csv.DictReader(comment_news)
+        return comment
+    
+print(load_comments("comment_news.csv"))
 
 # --- Fungsi untuk memproses data ---
 def process_data(news_list, comments_list):
@@ -22,6 +31,8 @@ def process_data(news_list, comments_list):
     """
     # TODO: Buat dictionary untuk kumpulkan komentar per idBerita
     comments_per_news = {}
+    for i in comments_list:
+        comments_per_news.append()
 
     # TODO: isi comments_per_news dari comments_list
     # hint: per idBerita simpan ratings (list) dan count
@@ -51,8 +62,8 @@ def process_data(news_list, comments_list):
 
 # --- Fungsi untuk tampilkan di Streamlit ---
 def main():
-    st.title("Analisis Sentimen & Popularitas Berita")
-    st.write("Menampilkan ID, Headline, Rata-rata Rating, dan Jumlah Komentar, diurutkan dari rating tertinggi.")
+    # st.title("Analisis Sentimen & Popularitas Berita")
+    # st.write("Menampilkan ID, Headline, Rata-rata Rating, dan Jumlah Komentar, diurutkan dari rating tertinggi.")
 
     # TODO: baca data CSV
     news_data = []     # ganti dengan pemanggilan load_news
@@ -65,5 +76,5 @@ def main():
     # hint: gunakan st.table(hasil)
     pass
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
