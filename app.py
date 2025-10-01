@@ -1,5 +1,5 @@
 import csv
-# import streamlit as st
+import streamlit as st
 
 # --- Fungsi untuk load data ---
 def load_news(filename):
@@ -18,7 +18,8 @@ def load_comments(filename):
     # TODO: sama seperti load_news tapi untuk file komentar
     with open('comment_news.csv',mode='r') as comment_news:
         comment = csv.DictReader(comment_news)
-        return comment
+        ubah_list= list(comment)
+        return ubah_list 
     
 print(load_comments("comment_news.csv"))
 
@@ -31,8 +32,13 @@ def process_data(news_list, comments_list):
     """
     # TODO: Buat dictionary untuk kumpulkan komentar per idBerita
     comments_per_news = {}
-    for i in comments_list:
-        comments_per_news.append()
+    for  komen in comments_list:
+        idb = komen['idBerita']
+        rating = float(komen['Rating'])
+        if idb not in comments_per_news:
+            comments_per_news[idb] = []
+        comments_per_news[idb].append(rating)
+
 
     # TODO: isi comments_per_news dari comments_list
     # hint: per idBerita simpan ratings (list) dan count
@@ -44,8 +50,14 @@ def process_data(news_list, comments_list):
         headline = n['Headline']
         # TODO: cek apakah idb ada di comments_per_news,
         # hitung rata-rata rating dan jumlah komentar
-        rata = 0  # ganti dengan hitungan
-        jumlah = 0  # ganti dengan hitungan
+        if idb in comments_per_news:
+            rating = comments_per_news[idb]
+            jumlah = len(rating) # ganti dengan hitungan
+            rata = sum(rating) / jumlah if jumlah > 0 else 0 # ganti dengan hitungan
+        else:
+            jumlah = 0
+            rata = 0
+
         result.append({
             'ID Berita': idb,
             'Headline': headline,
@@ -58,23 +70,24 @@ def process_data(news_list, comments_list):
         return item['Rata-rata Rating']
 
     # TODO: urutkan result berdasarkan ambil_rating reverse=True
+    result.sort(key=ambil_rating,reverse=True)
     return result
 
 # --- Fungsi untuk tampilkan di Streamlit ---
 def main():
-    # st.title("Analisis Sentimen & Popularitas Berita")
-    # st.write("Menampilkan ID, Headline, Rata-rata Rating, dan Jumlah Komentar, diurutkan dari rating tertinggi.")
+    st.title("Analisis Sentimen & Popularitas Berita")
+    st.write("Menampilkan ID, Headline, Rata-rata Rating, dan Jumlah Komentar, diurutkan dari rating tertinggi.")
 
     # TODO: baca data CSV
-    news_data = []     # ganti dengan pemanggilan load_news
-    comment_data = []  # ganti dengan pemanggilan load_comments
+    news_data = load_news("news_data.csv")     # ganti dengan pemanggilan load_news
+    comment_data = load_comments("comment_news.csv")  # ganti dengan pemanggilan load_comments
 
     # TODO: proses data
-    hasil = []  # ganti dengan pemanggilan process_data
+    hasil = process_data(news_data,comment_data)  # ganti dengan pemanggilan process_data
 
     # TODO: tampilkan tabel di Streamlit
     # hint: gunakan st.table(hasil)
-    pass
+    st.table(hasil)
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    main()
